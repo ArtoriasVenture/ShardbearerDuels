@@ -36,13 +36,15 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\MainMenu.cs" />
-     <Compile Include="Assets\Scripts\GameMain.cs" />
-     <Compile Include="Assets\Scripts\Stat.cs" />
-     <Compile Include="Assets\Scripts\PlayerStatsTest.cs" />
      <Compile Include="Assets\Scripts\PlayerStatsFinal.cs" />
-     <Compile Include="Assets\Scripts\PlayerStats.cs" />
+     <Compile Include="Assets\Scripts\Stance.cs" />
      <Compile Include="Assets\Scripts\BattleSystem.cs" />
+     <Compile Include="Assets\Scripts\PlayerStats.cs" />
+     <Compile Include="Assets\Scripts\PlayerStatsTest.cs" />
+     <Compile Include="Assets\Scripts\BattleHUD.cs" />
+     <Compile Include="Assets\Scripts\MainMenu.cs" />
+     <Compile Include="Assets\Scripts\Stat.cs" />
+     <Compile Include="Assets\Scripts\GameMain.cs" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />

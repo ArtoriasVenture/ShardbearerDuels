@@ -18,7 +18,10 @@ public class PlayerStatsFinal : MonoBehaviour
     public int greavesCurrentHealth     {get; private set;}
     public int gauntletsCurrentHealth   {get; private set;}
 
-    
+    bool shattered = false;
+    string currentStance = "blood";
+    int currentPosition = 0;
+
 
     void Awake ()
     {
@@ -30,32 +33,135 @@ public class PlayerStatsFinal : MonoBehaviour
         gauntletsCurrentHealth  = gauntletsMaxHealth;
     }
 
+    void attack(PlayerStatsFinal target)
+    {   
 
+        int cPos = getPosition();
+        int oppCPos = target.getPosition();
+
+        if ( (((cPos + 1) == oppCPos) || ((cPos + 2) == oppCPos)) || (((cPos - 1) == oppCPos) || ((cPos - 2) == oppCPos)) )
+        {
+            int randomNum = Random.Range(0, 100); 
+
+
+            //calc based on stance bounus
+            string currStance = getStance();
+
+            if(currStance == "flame")
+            randomNum += 5;
+
+            string oppCurrStance = target.getStance();
+
+            if (oppCurrStance == "blood")
+                randomNum += 10;
+        
+            if (oppCurrStance == "smoke")
+                randomNum -= 10;
+            
+            if (oppCurrStance == "vine")
+                randomNum -= 15;
+
+
+            //calc based on what blocks what
+            if ( (currStance == "flame") && ((oppCurrStance == "smoke") || (oppCurrStance == "stone")) )
+                randomNum -=50;
+
+            if ( (currStance == "iron") && ((oppCurrStance == "flame") || (oppCurrStance == "wind")) )
+                randomNum -=50;
+                
+            if ( (currStance == "smoke") && ((oppCurrStance == "iron") || (oppCurrStance == "vine")) )
+                randomNum -=50;
+
+            if ( (currStance == "stone") && ((oppCurrStance == "flame") || (oppCurrStance == "wind")) )
+                randomNum -=50;
+
+            if ( (currStance == "vine") && ((oppCurrStance == "smoke") || (oppCurrStance == "stone") || (oppCurrStance == "iron")) )
+                randomNum -=50;
+
+            if ( (currStance == "wind") && ((oppCurrStance == "iron") || (oppCurrStance == "vine")) )
+                randomNum -=50;
+
+            //if both have same stance parry
+            if (currStance == oppCurrStance)
+                randomNum = 0;
+
+            if (randomNum >= 80) {
+                target.TakeDamage(currStance);
+
+                if ((currStance == "wind") && (oppCurrStance != "stone"))
+                {
+                    if ((cPos < oppCPos) && (oppCPos != 5))
+                    target.moveRight();
+
+                    if ((cPos > oppCPos) && (oppCPos != 1))
+                    target.moveLeft();
+                }//calc windstance if
+
+
+            }//calc if hit if
+        }//calc if in range if
+    }//attack
+
+    public void setPosition(int pos)
+    {
+        currentPosition = pos;
+    }
+
+    public int getPosition()
+    {
+        return currentPosition;
+    }
+
+    public void setStance(string stance)
+    {
+        currentStance = stance;
+    }
+
+    public string getStance()
+    {
+        return currentStance;
+    }
+
+
+
+    public void moveLeft()
+    {
+        int Position = getPosition();
+        if (Position != 1)
+            currentPosition -= 1;
+    }
+
+    public void moveRight()
+    {
+        int Position = getPosition();
+        if (Position != 5)
+            currentPosition += 1;
+    }
 
     public void TakeDamage (string armorHit)
     {
     
-        if (armorHit == "helm"){
+        if (armorHit == "stone"){
             helmCurrentHealth -= 50;
             Debug.Log(transform.name + " takes 50 damage.");
         }
-        if (armorHit == "pauldrons"){
+        if (armorHit == "iron"){
             pauldronsCurrentHealth -= 50;
             Debug.Log(transform.name + " takes 50 damage.");
         }
-        if (armorHit == "chestplate"){
+        if (armorHit == "vine"){
             chestplateCurrentHealth -= 50;
             Debug.Log(transform.name + " takes 50 damage.");
         }
-        if (armorHit == "fauld"){
+        if (armorHit == "wind"){
             fauldCurrentHealth -= 50;
             Debug.Log(transform.name + " takes 50 damage.");
         }
-        if (armorHit == "greaves"){
+        if (armorHit == "smoke"){
             greavesCurrentHealth -= 50;
             Debug.Log(transform.name + " takes 50 damage.");
         }
-        if (armorHit == "gauntlets"){
+        if (armorHit == "flame"){
             gauntletsCurrentHealth -= 50;
             Debug.Log(transform.name + " takes 50 damage.");
         }
@@ -75,5 +181,17 @@ public class PlayerStatsFinal : MonoBehaviour
     public virtual void Shatter () 
     {
         Debug.Log(transform.name + " has Shattered.");
+        shattered = true;
     }
+
+   public bool hasShattered()
+   {
+    if (shattered == true)
+        return true;
+    else
+        return false;
+   } 
+
+
+    
 }
