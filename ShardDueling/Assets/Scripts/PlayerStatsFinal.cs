@@ -33,7 +33,7 @@ public class PlayerStatsFinal : MonoBehaviour
         gauntletsCurrentHealth  = gauntletsMaxHealth;
     }
 
-    void attack(PlayerStatsFinal target)
+    public void attack(PlayerStatsFinal target)
     {   
 
         int cPos = getPosition();
@@ -122,7 +122,25 @@ public class PlayerStatsFinal : MonoBehaviour
         return currentStance;
     }
 
-
+    public int getSpeed()
+    {
+        string currentS = getStance();
+        if (currentS == "flame")
+            return 1;
+        if (currentS == "smoke")
+            return 2;
+        if (currentS == "vine")
+            return 3;
+        if (currentS == "wind")
+            return 5;//NOTE: this is 5 and not 4 becuase only the first 3 stances are fast enough to hit before they move
+                        // TLDR: moving is fast enough to happen before any moves slower than vine stance
+        if (currentS == "iron")
+            return 6;
+        if (currentS == "stone")
+            return 7;
+        else
+            return 0;
+    }
 
     public void moveLeft()
     {
@@ -180,7 +198,7 @@ public class PlayerStatsFinal : MonoBehaviour
 
     public virtual void Shatter () 
     {
-        Debug.Log(transform.name + " has Shattered.");
+        Debug.Log(transform.name + " has had their armor Shattered.");
         shattered = true;
     }
 

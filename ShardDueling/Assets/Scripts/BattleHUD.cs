@@ -2,19 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro; 
+[SerializeField] 
+
 
 public class BattleHUD : MonoBehaviour
 {
-    public Text stanceText;
+    public TextMeshProUGUI stanceText;
     public Slider helmSlide;
     public Slider pauldronsSlide;
     public Slider chestplateSlide;
     public Slider fauldSlide;
     public Slider greavesSlide;
     public Slider gauntletsSlide;
+    
+    
 
     public void SetHUD (PlayerStatsFinal player)
     {
+
         stanceText.text          = player.getStance();
        
         helmSlide.maxValue       = player.helmMaxHealth; 

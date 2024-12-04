@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 
-    public enum BattleState { START, ROUNDSTARTP1,ROUNDSTARTP2, PLAYER1TURN, PLAYER2TURN, END }
+    public enum BattleState { START, ROUNDSTARTP1,ROUNDSTARTP2, PLAYER1TURN, PLAYER2TURN, RESOLVEACTIONS, END }
 
 public class BattleSystem : MonoBehaviour
 {
@@ -19,6 +20,9 @@ PlayerStatsFinal player1;
 PlayerStatsFinal player2;
 
 public Text dialogueText;
+
+string ActionP1 = "";
+string ActionP2 = "";
 
 public BattleHUD player1HUD;
 public BattleHUD player2HUD;
@@ -50,11 +54,32 @@ public BattleState state;
         player2HUD.SetHUD(player2);
 
         yield return new WaitForSeconds(2f);
-
-        state = BattleState.ROUNDSTARTP1;
-        RoundStartPlayer1();
-        state = BattleState.ROUNDSTARTP2;
-        RoundStartPlayer2();
+        while ((player1.hasShattered() && player2.hasShattered())  == false)
+        {
+            state = BattleState.ROUNDSTARTP1;
+            RoundStartPlayer1();
+            state = BattleState.ROUNDSTARTP2;
+            RoundStartPlayer2();
+            state = BattleState.PLAYER1TURN;
+            getP1Action();
+            state = BattleState.PLAYER2TURN;
+            getP2Action();
+            state = BattleState.RESOLVEACTIONS;
+            StartCoroutine(playoutActions());
+            if ((player1.hasShattered() || player2.hasShattered())  == true)
+            {
+                    state = BattleState.END; 
+                    StartCoroutine(gameOver());
+            }
+            else{
+                state = BattleState.PLAYER1TURN;
+                getP1Action();
+                state = BattleState.PLAYER2TURN;
+                getP2Action();
+                state = BattleState.RESOLVEACTIONS;
+                playoutActions();  
+            }
+        }
     }
 
     void RoundStartPlayer1()
@@ -137,25 +162,201 @@ public BattleState state;
     //this loops untill hasShattered() is true
 
 
-    //void Player1Turn()
-    //{
-    //    if (state == BattleState.PLAYER1TURN)
-    //    {
+    void getP1Action()
+    {
+        if (state == BattleState.PLAYER1TURN)
+        {
+            //yield return new WaitForSeconds(1f);
+
+            dialogueText.text = "choose and action: <br>1 = attack <br>2 = move left<br>3 = move right";
+            if (Input.GetKeyDown(KeyCode.Keypad1))
+            {
+                ActionP1 = "attack";
+            }
+            if (Input.GetKeyDown(KeyCode.Keypad2))
+            {
+                ActionP1 = "move left";
+            }
+            if (Input.GetKeyDown(KeyCode.Keypad3))
+            {
+                ActionP1 = "move right";
+            }
+            else
+                getP1Action();
+        }
+    }
+
+    void getP2Action()
+    {
+        if (state == BattleState.PLAYER2TURN)
+        {
+            //yield return new WaitForSeconds(1f);
+
+            dialogueText.text = "choose and action: <br>1 = attack <br>2 = move left<br>3 = move right";
+            if (Input.GetKeyDown(KeyCode.Keypad1))
+            {
+                ActionP2 = "attack";
+            }
+            if (Input.GetKeyDown(KeyCode.Keypad2))
+            {
+                ActionP2 = "move left";
+            }
+            if (Input.GetKeyDown(KeyCode.Keypad3))
+            {
+                ActionP2 = "move right";
+            }
+            else
+                getP2Action();
+        }
+    }
+
+    IEnumerator playoutActions() 
+    {   
+        int actionSpeed1 = 3;
+        int actionSpeed2 = 3;
+
+        if (state == BattleState.RESOLVEACTIONS)
+        {
+            if ((ActionP1 == "attack") && (ActionP2 == "attack"))
+            {
+                actionSpeed1 = player1.getSpeed();
+                actionSpeed2 = player2.getSpeed();
+
+                if (actionSpeed1 > actionSpeed2) 
+                {
+                    player2.attack(player1);
+                    if ((player1.hasShattered() || player2.hasShattered())  == true)
+                        yield break; 
+                    yield return new WaitForSeconds(2f);
+                    player1.attack(player2);
+                    if ((player1.hasShattered() || player2.hasShattered())  == true)
+                        yield break;  
+                }
+                else 
+                {
+                    player1.attack(player2);
+                    if ((player1.hasShattered() || player2.hasShattered())  == true)
+                        yield break;  
+                    yield return new WaitForSeconds(2f);
+                    player2.attack(player1);
+                    if ((player1.hasShattered() || player2.hasShattered())  == true)
+                        yield break;  
+                }
+            }//if both attack
+
+            if ((ActionP1 == "attack") && (ActionP2 != "attack"))
+            {
+                actionSpeed1 = player1.getSpeed();
+                
+                if  (actionSpeed1 < actionSpeed2)
+                {
+                    player1.attack(player2);
+                    if ((player1.hasShattered() || player2.hasShattered())  == true)
+                        yield break; 
+                    yield return new WaitForSeconds(2f);
+                    
+                    if (ActionP2 == "move left")
+                        player2.moveLeft();
+                    if (ActionP2 == "move right")
+                        player2.moveRight();
+                }
+                else 
+                {
+                    if (ActionP2 == "move left")
+                        player2.moveLeft();
+                    if (ActionP2 == "move right")
+                        player2.moveRight();
+                    
+                    yield return new WaitForSeconds(2f);
+                    player1.attack(player2);
+                    if ((player1.hasShattered() || player2.hasShattered())  == true)
+                        yield break;  
+                }
+            }//if p1 attack and p2 move
+
+            if ((ActionP2 == "attack") && (ActionP1 != "attack"))
+            {
+                actionSpeed2 = player2.getSpeed();
+                
+                if  (actionSpeed2 < actionSpeed1)
+                {
+                    player2.attack(player1);
+                    if ((player1.hasShattered() || player2.hasShattered())  == true)
+                        yield break;  
+                    yield return new WaitForSeconds(2f);
+                    
+                    if (ActionP1 == "move left")
+                        player1.moveLeft();
+                    if (ActionP1 == "move right")
+                        player1.moveRight();
+                }
+                else 
+                {
+                    if (ActionP1 == "move left")
+                        player1.moveLeft();
+                    if (ActionP1 == "move right")
+                        player1.moveRight();
+                    
+                    yield return new WaitForSeconds(2f);
+                    player2.attack(player1);
+                    if ((player1.hasShattered() || player2.hasShattered())  == true)
+                        yield break; 
+                }
+            }//if p2 attack and p1 move
+
+            if ((ActionP1 != "attack") && (ActionP2 != "attack"))
+            {
+                actionSpeed1 = player1.getSpeed();
+                actionSpeed2 = player2.getSpeed();
+
+                if (actionSpeed1 > actionSpeed2) 
+                {
+                    if (ActionP2 == "move left")
+                        player2.moveLeft();
+                    if (ActionP2 == "move right")
+                        player2.moveRight();
+                    
+                    yield return new WaitForSeconds(2f);
+                  
+                    if (ActionP1 == "move left")
+                        player1.moveLeft();
+                    if (ActionP1 == "move right")
+                        player1.moveRight();
+                }
+                else 
+                {
+                    if (ActionP1 == "move left")
+                        player1.moveLeft();
+                    if (ActionP1 == "move right")
+                        player1.moveRight();
+                    
+                    yield return new WaitForSeconds(2f);                 
+                    
+                    if (ActionP2 == "move left")
+                        player2.moveLeft();
+                    if (ActionP2 == "move right")
+                        player2.moveRight();
+                }
+            }//if both move
+
+            
+        }
+
+    }
+
+    IEnumerator gameOver()
+    {
+        yield return new WaitForSeconds(3f);
+        if (player1.hasShattered() == true)
+            dialogueText.text = "Player 2 has claimed victory!";
         
-            
-            
-     //       yield return new WaitForSeconds(1f);
-
-     //       dialogueText.text = "choose and action: <br>1 = attack <br>2 = move left<br>3 = move right";
-      //      if (Input.GetKeyDown(KeyCode.Keypad1))
-      //      {
-      //          player1.attack();
-       //     }
-
-
-
-      //  }
-   // }
+        if (player2.hasShattered() == true)
+            dialogueText.text = "Player 2 has claimed victory!";
+        
+        yield return new WaitForSeconds(5f);
+        SceneManager.LoadSceneAsync(0);
+        
+    }
 
     // Update is called once per frame
     void Update()
