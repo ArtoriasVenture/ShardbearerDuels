@@ -22,7 +22,6 @@ public class PlayerStatsFinal : MonoBehaviour
     string currentStance = "blood";
     int currentPosition = 0;
 
-
     void Awake ()
     {
         helmCurrentHealth       = helmMaxHealth;
@@ -87,6 +86,7 @@ public class PlayerStatsFinal : MonoBehaviour
 
             if (randomNum >= 80) {
                 target.TakeDamage(currStance);
+                //targetHud.SetHP(currstance)
 
                 if ((currStance == "wind") && (oppCurrStance != "stone"))
                 {
@@ -209,6 +209,31 @@ public class PlayerStatsFinal : MonoBehaviour
     else
         return false;
    } 
+
+   public int getHelmHp ()
+   {
+    return helmCurrentHealth;
+   }
+   public int getpauldronsHp ()
+   {
+    return pauldronsCurrentHealth;
+   }
+   public int getChestplateHp ()
+   {
+    return chestplateCurrentHealth;
+   }
+   public int getFauldHp ()
+   {
+    return fauldCurrentHealth;
+   }
+   public int getGreavesHp ()
+   {
+    return greavesCurrentHealth;
+   }
+   public int getGauntletsHp ()
+   {
+    return gauntletsCurrentHealth;
+   }
 
 
     

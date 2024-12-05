@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-
+using TMPro; 
+[SerializeField] 
 
     public enum BattleState { START, ROUNDSTARTP1,ROUNDSTARTP2, PLAYER1TURN, PLAYER2TURN, RESOLVEACTIONS, END }
 
@@ -19,7 +20,7 @@ public Transform player2Station;
 PlayerStatsFinal player1;
 PlayerStatsFinal player2;
 
-public Text dialogueText;
+public TextMeshProUGUI dialogueText;
 
 string ActionP1 = "";
 string ActionP2 = "";
@@ -225,20 +226,24 @@ public BattleState state;
                 if (actionSpeed1 > actionSpeed2) 
                 {
                     player2.attack(player1);
+                    player1HUD.SetHP(player1);
                     if ((player1.hasShattered() || player2.hasShattered())  == true)
                         yield break; 
                     yield return new WaitForSeconds(2f);
                     player1.attack(player2);
+                    player2HUD.SetHP(player2);
                     if ((player1.hasShattered() || player2.hasShattered())  == true)
                         yield break;  
                 }
                 else 
                 {
                     player1.attack(player2);
+                    player2HUD.SetHP(player2);
                     if ((player1.hasShattered() || player2.hasShattered())  == true)
                         yield break;  
                     yield return new WaitForSeconds(2f);
                     player2.attack(player1);
+                    player1HUD.SetHP(player1);
                     if ((player1.hasShattered() || player2.hasShattered())  == true)
                         yield break;  
                 }
@@ -251,6 +256,7 @@ public BattleState state;
                 if  (actionSpeed1 < actionSpeed2)
                 {
                     player1.attack(player2);
+                    player2HUD.SetHP(player2);
                     if ((player1.hasShattered() || player2.hasShattered())  == true)
                         yield break; 
                     yield return new WaitForSeconds(2f);
@@ -269,6 +275,7 @@ public BattleState state;
                     
                     yield return new WaitForSeconds(2f);
                     player1.attack(player2);
+                    player2HUD.SetHP(player2);
                     if ((player1.hasShattered() || player2.hasShattered())  == true)
                         yield break;  
                 }
@@ -281,6 +288,7 @@ public BattleState state;
                 if  (actionSpeed2 < actionSpeed1)
                 {
                     player2.attack(player1);
+                    player1HUD.SetHP(player1);
                     if ((player1.hasShattered() || player2.hasShattered())  == true)
                         yield break;  
                     yield return new WaitForSeconds(2f);
@@ -299,6 +307,7 @@ public BattleState state;
                     
                     yield return new WaitForSeconds(2f);
                     player2.attack(player1);
+                    player1HUD.SetHP(player1);
                     if ((player1.hasShattered() || player2.hasShattered())  == true)
                         yield break; 
                 }

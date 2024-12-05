@@ -30,10 +30,10 @@ public class BattleHUD : MonoBehaviour
         pauldronsSlide.value     = player.pauldronsCurrentHealth;
 
         chestplateSlide.maxValue = player.chestplateMaxHealth; 
-        chestplateSlide.value     = player.chestplateCurrentHealth;
+        chestplateSlide.value    = player.chestplateCurrentHealth;
 
         fauldSlide.maxValue      = player.fauldMaxHealth; 
-        fauldSlide.value          = player.fauldCurrentHealth;
+        fauldSlide.value         = player.fauldCurrentHealth;
 
         greavesSlide.maxValue    = player.greavesMaxHealth; 
         greavesSlide.value       = player.greavesCurrentHealth;
@@ -43,9 +43,14 @@ public class BattleHUD : MonoBehaviour
     }
 
 
-    public void SetHP(int hp)
+    public void SetHP(PlayerStatsFinal hit)
     {
-
+        helmSlide.value = hit.getHelmHp();     
+        pauldronsSlide.value = hit.getpauldronsHp();       
+        chestplateSlide.value = hit.getChestplateHp();       
+        fauldSlide.value = hit.getFauldHp();      
+        greavesSlide.value = hit.getGreavesHp();   
+        gauntletsSlide.value = hit.getGauntletsHp();
     }
 
 
