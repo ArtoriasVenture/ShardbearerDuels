@@ -1,3 +1,4 @@
+/*
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -58,9 +59,9 @@ public BattleState state;
         while ((player1.hasShattered() && player2.hasShattered())  == false)
         {
             state = BattleState.ROUNDSTARTP1;
-            RoundStartPlayer1();
-            state = BattleState.ROUNDSTARTP2;
-            RoundStartPlayer2();
+            StartCoroutine(RoundStartPlayer1());
+            //state = BattleState.ROUNDSTARTP2;
+            //RoundStartPlayer2();
             state = BattleState.PLAYER1TURN;
             getP1Action();
             state = BattleState.PLAYER2TURN;
@@ -83,73 +84,90 @@ public BattleState state;
         }
     }
 
-    void RoundStartPlayer1()
+    IEnumerator RoundStartPlayer1()
     {
         if (state == BattleState.ROUNDSTARTP1)
         {
-        dialogueText.text = "Player 1 Choose your stance:  <br>1 = flamestance <br>2 = ironstance <br>3 = smokestance <br>4 = stonestance <br>5 = vinestance <br>6 = windstance ";           
+        dialogueText.text = "Player 1 Choose your stance:  <br>1 = flamestance <br>2 = ironstance <br>3 = smokestance <br>4 = stonestance <br>5 = vinestance <br>6 = windstance ";             
+        for (;;)
+        {
             if (Input.GetKeyDown(KeyCode.Keypad1))
             {
                 player1.setStance("flame");
+                break;
             }
             if (Input.GetKeyDown(KeyCode.Keypad2))
             {
                 player1.setStance("iron");
+                break;
             }
             if (Input.GetKeyDown(KeyCode.Keypad3))
             {
                 player1.setStance("smoke");
+                break;
             }
             if (Input.GetKeyDown(KeyCode.Keypad4))
             {
                 player1.setStance("stone");
+                break;
             }
             if (Input.GetKeyDown(KeyCode.Keypad5))
             {
                 player1.setStance("vine");
+                break;
             }
             if (Input.GetKeyDown(KeyCode.Keypad6))
             {
                 player1.setStance("wind");
+                break;
             }
-            else{
-                RoundStartPlayer1();
-            }
+             yield return null;
+        }
+            state = BattleState.ROUNDSTARTP2;
+            StartCoroutine(RoundStartPlayer2());
+        
         }
     }
     
-    void RoundStartPlayer2()
+    IEnumerator RoundStartPlayer2()
     {
         if (state == BattleState.ROUNDSTARTP2)
         {
-        dialogueText.text = "Player 2 Choose your stance:  <br>1 = flamestance <br>2 = ironstance <br>3 = smokestance <br>4 = stonestance <br>5 = vinestance <br>6 = windstance ";           
-            if (Input.GetKeyDown(KeyCode.Keypad1))
-            {
-                player2.setStance("flame");
+            dialogueText.text = "Player 2 Choose your stance:  <br>1 = flamestance <br>2 = ironstance <br>3 = smokestance <br>4 = stonestance <br>5 = vinestance <br>6 = windstance ";           
+            for (;;){
+               if (Input.GetKeyDown(KeyCode.Keypad1))
+                {
+                    player2.setStance("flame");
+                    break;
+                }
+                if (Input.GetKeyDown(KeyCode.Keypad2))
+                {
+                    player2.setStance("iron");
+                    break;
+                }
+                if (Input.GetKeyDown(KeyCode.Keypad3))
+                {
+                    player2.setStance("smoke");
+                    break;
+                }
+                if (Input.GetKeyDown(KeyCode.Keypad4))
+                {
+                    player2.setStance("stone");
+                    break;
+                }
+                if (Input.GetKeyDown(KeyCode.Keypad5))
+                {
+                    player2.setStance("vine");
+                    break;
+                }
+                if (Input.GetKeyDown(KeyCode.Keypad6))
+                {
+                    player2.setStance("wind");
+                    break;
+                }
+                yield return null;
             }
-            if (Input.GetKeyDown(KeyCode.Keypad2))
-            {
-                player2.setStance("iron");
-            }
-            if (Input.GetKeyDown(KeyCode.Keypad3))
-            {
-                player2.setStance("smoke");
-            }
-            if (Input.GetKeyDown(KeyCode.Keypad4))
-            {
-                player2.setStance("stone");
-            }
-            if (Input.GetKeyDown(KeyCode.Keypad5))
-            {
-                player2.setStance("vine");
-            }
-            if (Input.GetKeyDown(KeyCode.Keypad6))
-            {
-                player2.setStance("wind");
-            }
-            else{
-                RoundStartPlayer2();
-            }
+
         }
     }
     //currently adding the gameplay loop
@@ -373,3 +391,4 @@ public BattleState state;
         
     }
 }
+*/

@@ -22,6 +22,8 @@ public class PlayerStatsFinal : MonoBehaviour
     string currentStance = "blood";
     int currentPosition = 0;
 
+    public string playerName = "";
+
     void Awake ()
     {
         helmCurrentHealth       = helmMaxHealth;
@@ -30,6 +32,16 @@ public class PlayerStatsFinal : MonoBehaviour
         fauldCurrentHealth      = fauldMaxHealth;
         greavesCurrentHealth    = greavesMaxHealth;
         gauntletsCurrentHealth  = gauntletsMaxHealth;
+    }
+
+    public void setName(string name)
+    {
+        playerName = name;
+    }
+
+    public string getName()
+    {
+        return playerName;
     }
 
     public void attack(PlayerStatsFinal target)
@@ -105,6 +117,21 @@ public class PlayerStatsFinal : MonoBehaviour
     public void setPosition(int pos)
     {
         currentPosition = pos;
+
+        if (getPosition() == 1) 
+            transform.position = new Vector2(0,-150);
+        
+        if (getPosition() == 2) 
+            transform.position = new Vector2(0,-75);
+
+        if (getPosition() == 3) 
+            transform.position = new Vector2(0,0);
+
+        if (getPosition() == 4) 
+            transform.position = new Vector2(0,75);
+
+        if (getPosition() == 5) 
+            transform.position = new Vector2(0,150);
     }
 
     public int getPosition()
