@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[SerializeField] 
 public class PlayerStatsFinal : MonoBehaviour
 {
     public int helmMaxHealth        = 100;
@@ -19,10 +19,11 @@ public class PlayerStatsFinal : MonoBehaviour
     public int gauntletsCurrentHealth   {get; private set;}
 
     bool shattered = false;
-    string currentStance = "blood";
+    string currentStance = "iron";
     int currentPosition = 0;
 
     public string playerName = "";
+
 
     void Awake ()
     {
@@ -50,6 +51,7 @@ public class PlayerStatsFinal : MonoBehaviour
         int cPos = getPosition();
         int oppCPos = target.getPosition();
 
+        //calc if in range
         if ( (((cPos + 1) == oppCPos) || ((cPos + 2) == oppCPos)) || (((cPos - 1) == oppCPos) || ((cPos - 2) == oppCPos)) )
         {
             int randomNum = Random.Range(0, 100); 
@@ -96,17 +98,17 @@ public class PlayerStatsFinal : MonoBehaviour
             if (currStance == oppCurrStance)
                 randomNum = 0;
 
-            if (randomNum >= 80) {
+            if (randomNum > 20) {
                 target.TakeDamage(currStance);
                 //targetHud.SetHP(currstance)
 
                 if ((currStance == "wind") && (oppCurrStance != "stone"))
                 {
                     if ((cPos < oppCPos) && (oppCPos != 5))
-                    target.moveRight();
+                    target.shoveRight();
 
                     if ((cPos > oppCPos) && (oppCPos != 1))
-                    target.moveLeft();
+                    target.shoveLeft();
                 }//calc windstance if
 
 
@@ -114,29 +116,15 @@ public class PlayerStatsFinal : MonoBehaviour
         }//calc if in range if
     }//attack
 
-    public void setPosition(int pos)
-    {
-        currentPosition = pos;
-
-        if (getPosition() == 1) 
-            transform.position = new Vector2(0,-150);
-        
-        if (getPosition() == 2) 
-            transform.position = new Vector2(0,-75);
-
-        if (getPosition() == 3) 
-            transform.position = new Vector2(0,0);
-
-        if (getPosition() == 4) 
-            transform.position = new Vector2(0,75);
-
-        if (getPosition() == 5) 
-            transform.position = new Vector2(0,150);
-    }
 
     public int getPosition()
     {
         return currentPosition;
+    }
+
+    public void setPosition(int p)
+    {
+        currentPosition = p;
     }
 
     public void setStance(string stance)
@@ -169,14 +157,28 @@ public class PlayerStatsFinal : MonoBehaviour
             return 0;
     }
 
-    public void moveLeft()
+    public void moveLeft(PlayerStatsFinal inWay)
+    {
+        int Position = getPosition();
+        if ( (Position != 1) && (inWay.getPosition() != (Position - 1 ) ) )
+            currentPosition -= 1;
+    }
+
+    public void moveRight(PlayerStatsFinal inWay)
+    {
+        int Position = getPosition();
+        if ( (Position != 5) && (inWay.getPosition() != (Position + 1) ) )
+            currentPosition += 1;
+    }
+
+    public void shoveLeft()
     {
         int Position = getPosition();
         if (Position != 1)
             currentPosition -= 1;
     }
 
-    public void moveRight()
+    public void shoveRight()
     {
         int Position = getPosition();
         if (Position != 5)
@@ -213,7 +215,7 @@ public class PlayerStatsFinal : MonoBehaviour
        
         if ( (helmCurrentHealth <= 0) || (pauldronsCurrentHealth <= 0) ||
         (chestplateCurrentHealth <= 0)|| (fauldCurrentHealth <= 0)     ||
-        (greavesCurrentHealth <= 0)   || (gauntletsCurrentHealth <+ 0))
+        (greavesCurrentHealth <= 0)   || (gauntletsCurrentHealth <= 0))
         {
             Shatter();
             //end game 
